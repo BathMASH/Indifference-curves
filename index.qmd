@@ -1,0 +1,83 @@
+---
+title: "Indifference curves"
+format: html
+execute:
+  echo: false
+jupyter: python3
+---
+
+# Plotting Utility functions
+
+```{python}
+# import all the good stuff
+import numpy as np
+import plotly.graph_objects as go
+```
+
+Suppose the a utility function, $U(x,y)=xy$, where $x$ is the quantity of good $x$, and, $y$ is the quantity of good $y$. Since the utility depends on two variables, $x$ and $y$, if we draw a graph of $U$ it requires $3$ dimensions. 
+
+## Indifference curves
+
+Since drawing in 3d is hard it is useful to consider indifference curves. These are contor rings of the utility function. The intereactive diagram below shows the utility function plotted in 3d, with some indifference curves above. The curves show all the $x$, $y$ points which have the same utility, hence the consumer is indifferent to the combination of $x$ and $y$ shown by the line.  
+
+```{python}
+#make a mesh, the j bit defines the number of points between 0 and 10
+x, y = np.mgrid[0:10:100j, 0:10:100j]
+z = x*y
+fig = go.Figure(go.Surface(x=x,y=y,z=z, contours = {"z": {"show": True, "start": 5, "end": 100, "size": 10}}))
+#add contor lines to 'roof' of plot
+fig.update_traces(contours_z=dict(show=True, usecolormap=True, highlightcolor="limegreen", project_z=True))
+# choose camera position
+fig.update_layout(title='Indifference Curves', autosize=False,               scene_camera_eye=dict(x=-1.5, y=-1.5, z=-0.64), width=600, height=500)
+fig.show()
+# useful info: https://plotly.com/python/3d-surface-plots/
+```
+
+The corresponding indifferent curve for $U(x,y)= c$, where $c$ is a constant, is plotted below. Move the slider to change the value of $c$. It starts with $c=5$.
+
+
+```{python}
+fig = go.Figure()
+# Add traces, one for each slider step
+utilities = np.arange(5, 100, 10)
+for step in utilities:
+    fig.add_trace(
+        go.Contour(
+            visible=False,
+            name="U =" + str(step),
+            z=z,
+            contours_coloring='lines',
+            line_width=2,
+            contours = dict(start=step, end=step)))
+
+# Make 0th trace visible
+fig.data[0].visible = True
+
+# Create and add slider
+steps = []
+for i in range(len(fig.data)):
+    step = dict(
+        method="update",
+        args=[{"visible": [False] * len(fig.data)},
+              {"title": "Indifference curve with U(x,y) = " + str(utilities[i])}],  # layout attribute
+    )
+    step["args"][0]["visible"][i] = True  # Toggle i'th trace to "visible"
+    steps.append(step)
+
+sliders = [dict(
+    active=0,
+    currentvalue={"prefix": "Utility: "},
+    pad={"t": 50},
+    steps=steps
+)]
+
+fig.update_layout(
+    xaxis_title="x",
+    yaxis_title="y",
+    showlegend=False,
+    sliders=sliders
+)
+
+fig.show()
+
+```
