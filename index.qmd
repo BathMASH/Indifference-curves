@@ -12,13 +12,14 @@ jupyter: python3
 # import all the good stuff
 import numpy as np
 import plotly.graph_objects as go
+import plotly.express as px
 ```
 
 Suppose the a utility function, $U(x,y)=xy$, where $x$ is the quantity of good $x$, and, $y$ is the quantity of good $y$. Since the utility depends on two variables, $x$ and $y$, if we draw a graph of $U$ it requires $3$ dimensions. 
 
 ## Indifference curves
 
-Since drawing in 3d is hard it is useful to consider indifference curves. These are contor rings of the utility function. The intereactive diagram below shows the utility function plotted in 3d, with some indifference curves above. The curves show all the $x$, $y$ points which have the same utility, hence the consumer is indifferent to the combination of $x$ and $y$ shown by the line.  
+Since drawing in 3d is hard it is useful to consider indifference curves. These are contor lines of the utility function. The intereactive diagram below shows the utility function plotted in 3d, with some indifference curves above. The curves show all the $x$, $y$ points which have the same utility, hence the consumer is indifferent to the combination of $x$ and $y$ shown by the line.  
 
 ```{python}
 #make a mesh, the j bit defines the number of points between 0 and 10
@@ -35,23 +36,24 @@ fig.show()
 
 The corresponding indifferent curve for $U(x,y)= c$, where $c$ is a constant, is plotted below. Move the slider to change the value of $c$. It starts with $c=5$.
 
-
 ```{python}
+colours = px.colors.sequential.Plasma_r
+colours.reverse()
 fig = go.Figure()
 # Add traces, one for each slider step
 utilities = np.arange(5, 100, 10)
-for step in utilities:
+for i, step in enumerate(utilities):
     fig.add_trace(
         go.Contour(
             visible=False,
             name="U =" + str(step),
             z=z,
             contours_coloring='lines',
+            colorscale = [[0,colours[i]],[1,colours[i]]],
             line_width=2,
-            contours = dict(start=step, end=step)))
+            contours = dict(start=step, end=step), 
+            showscale=False))
 
-# Make 0th trace visible
-fig.data[0].visible = True
 
 # Create and add slider
 steps = []
@@ -78,6 +80,8 @@ fig.update_layout(
     sliders=sliders
 )
 
+# Make 0th trace visible
+fig.data[0].visible = True
 fig.show()
 
 ```
