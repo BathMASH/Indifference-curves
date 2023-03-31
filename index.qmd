@@ -12,7 +12,10 @@ jupyter: python3
 # import all the good stuff
 import numpy as np
 import plotly.graph_objects as go
+#this contains a lists of colours used to make the graphs
 import plotly.express as px
+# To make a table of the 3d coords
+import pandas as pd
 ```
 
 Suppose the a utility function, $U(x,y)=xy$, where $x$ is the quantity of good $x$, and, $y$ is the quantity of good $y$. Since the utility depends on two variables, $x$ and $y$, if we draw a graph of $U$ it requires $3$ dimensions. 
@@ -32,7 +35,22 @@ fig.update_traces(contours_z=dict(show=True, usecolormap=True, highlightcolor="l
 fig.update_layout(title='Indifference Curves', autosize=False,               scene_camera_eye=dict(x=-1.5, y=-1.5, z=-0.64), width=600, height=500)
 fig.show()
 # useful info: https://plotly.com/python/3d-surface-plots/
+
+#maybe offer this for accessibility https://stackoverflow.com/questions/56545819/is-there-a-way-to-export-an-stl-file-from-a-matplotlib-surface-plot
 ```
+
+:::{.callout-tip collapse="true"}
+## See the coordinates that make the surface here.
+
+```{python}
+#experiment to make 3d coords accessible
+
+x, y = np.mgrid[0:10:11j, 0:10:11j]
+z = x*y
+df = pd.DataFrame(z)
+df.to_html()
+```
+:::
 
 The corresponding indifferent curve for $U(x,y)= c$, where $c$ is a constant, is plotted below. Move the slider to change the value of $c$. It starts with $c=5$.
 
@@ -50,6 +68,7 @@ for i, step in enumerate(utilities):
             z=z,
             contours_coloring='lines',
             colorscale = [[0,colours[i]],[1,colours[i]]],
+            #set the start and end of colour scale to same colour to match the 3d graph
             line_width=2,
             contours = dict(start=step, end=step), 
             showscale=False))
@@ -85,3 +104,4 @@ fig.data[0].visible = True
 fig.show()
 
 ```
+
