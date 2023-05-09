@@ -37,7 +37,16 @@ fig.show()
 # useful info: https://plotly.com/python/3d-surface-plots/
 
 #maybe offer this for accessibility https://stackoverflow.com/questions/56545819/is-there-a-way-to-export-an-stl-file-from-a-matplotlib-surface-plot
+# This looks good too: https://github.com/asahidari/surf2stl-python
 ```
+```{python}
+#| echo: false
+
+import surf2stl 
+surf2stl.write('indifference.stl', x, y, z)
+```
+
+[Download the surface as an stl](indifference.stl). You can 3d print the stl and feel the resource for yourself.
 
 :::{.callout-tip collapse="true"}
 ## See the coordinates that make the surface here.
@@ -105,3 +114,9 @@ fig.show()
 
 ```
 
+```{python}
+#| echo: false
+
+import surf2stl 
+surf2stl.write('indifference.stl', x, y, z)
+```
